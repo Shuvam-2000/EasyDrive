@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import "./config/connection.js"
 import { configDotenv } from 'dotenv';
+import customerRoute from "./routes/customer.routes.js"
 
 // initialize the app
 const app = express();
@@ -21,6 +22,9 @@ app.use(cors());
 app.get('/', (req,res) => {
     res.send("Hello Server Is Running")
 });
+
+// routes
+app.use("/api/customer", customerRoute)
 
 // run the server
 app.listen(PORT, () => console.log(`Server runing on PORT: ${PORT}`));
