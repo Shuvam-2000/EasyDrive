@@ -142,7 +142,7 @@ export const getCustomerInfo = async (req,res) => {
         });
 
         res.status(200).json({
-            message: "User Found",
+            message: "Customer Found",
             success: true,
             customer: customer
         });

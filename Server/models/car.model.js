@@ -39,6 +39,11 @@ const carSchema = new mongoose.Schema(
       enum: ["Manual", "Automatic"],
       required: true,
     },
+    avaliable:{
+      type: String,
+      enum: ["Avaliable", "Not Avaliable"],
+      default: "Avaliable"
+    },
     seats: {
       type: Number,
       required: true,
