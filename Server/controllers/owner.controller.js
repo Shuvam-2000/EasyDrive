@@ -1,4 +1,5 @@
 import Owner from "../models/owner.model.js";
+import Car from "../models/car.model.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { configDotenv } from "dotenv";
@@ -147,4 +148,70 @@ export const getOwnerInfo = async (req,res) => {
             success: false
         })
     }
+}
+
+// get all cars registered by owner
+export const getAllCarsRegistered = async (req,res) => {
+  try {
+      // fetching ownerId from middleware
+      const ownerId = req.owner.ownerId
+
+      if(!ownerId) return res.status(404).json({
+        message: "Owner Not Found",
+        success: false
+      })
+
+      // fetch the cars registered to the owner by ownerId
+      const car = await Car.findOne({ owner: ownerId })
+
+      if(!car) return res.status(400).json({
+        message: "No Cars Found",
+        success: false
+      })
+
+      res.status(200).json({
+        message: "All Cars Found",
+        success: true,
+        car: car
+      })
+  } catch (error) {
+      console.error("Error Fetching Car Info For Owner" , error.message)
+      res.status(500).json({
+        message: 'Internal Server Error',
+        success: false
+      })
+  }
+}
+
+// delete any registered car by owner
+export const deleteRegisteredCar = async (req,res) => {
+  try {
+      const ownerId = req.owner.ownerId
+      if(!ownerId) return res.status(404).json({
+        message: "Owner Not Found"
+      })
+
+      const { id } = req.body
+      if(!id) return res.status(404).json({
+        message: "Car Not Found",
+        success: false
+      })
+
+      // delete the car by the carId
+      const car = await Car.findByIdAndDelete(id)
+
+      // delete the car id from the owner’s cars array
+      await Owner.findByIdAndUpdate(ownerId, {$pull: {cars: car._id }})
+
+      res.status(200).json({
+        message: "Car Deleted Successfully",
+        success: true
+      })
+  } catch (error) {
+      console.error("Error Deleting Car" , error.message)
+      res.status(500).json({
+        message: 'Internal Server Error',
+        success: false
+      })
+  }
 }

@@ -7,7 +7,7 @@ const carSchema = new mongoose.Schema(
       ref: "owner",
       required: true,
     },
-    make: {
+    maker: {
       type: String,
       required: true,
     },
@@ -48,13 +48,13 @@ const carSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    description:{
+      type: String,
+      required: true
+    },
     pricePerDay: {
       type: Number,
       required: true,
-    },
-    available: {
-      type: Boolean,
-      default: true,
     },
     location: {
       type: String,

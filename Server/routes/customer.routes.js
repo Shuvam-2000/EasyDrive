@@ -6,6 +6,8 @@ import {
 import {
   customerLogin,
   customerRegistration,
+  getAllCars,
+  getCarById,
   getCustomerInfo,
 } from "../controllers/customer.controller.js";
 
@@ -20,5 +22,11 @@ router.post("/login", customerLogin);
 
 // get customer info
 router.get("/get", isCustomerAuthenticated, isCustomer, getCustomerInfo);
+
+// get all cars present for customer
+router.get("/get-car", getAllCars);
+
+// get cars info by id
+router.get("/car/:id", getCarById);
 
 export default router;

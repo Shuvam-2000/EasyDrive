@@ -1,4 +1,5 @@
 import Customer from "../models/customer.model.js";
+import Car from "../models/car.model.js";
 import jwt from "jsonwebtoken";
 import bcrypt from 'bcrypt';
 import { configDotenv } from 'dotenv';
@@ -153,5 +154,61 @@ export const getCustomerInfo = async (req,res) => {
             message: 'Internal Server Error',
             success: false
         })
+    }
+}
+
+// get all cars registered
+export const getAllCars = async (req,res) => {
+    try {
+        const cars = await Car.find({})
+
+        // if no cars exists
+        if(!cars) return res.status(404).json({
+            message: "No Cars Present At the Moment",
+            success: false
+        })
+
+        res.status(200).json({
+            message: "Here Are the Cars Present",
+            success: true,
+            car: cars
+        })
+    } catch (error) {
+        console.error("Error Fetching All Cars" , error.message)
+        res.status(500).json({
+            message: 'Internal Server Error',
+            success: false
+        }) 
+    }
+}
+
+// get cars info by the carId
+export const getCarById = async (req,res) => {
+    try {
+        // fetch carId from the req parmas
+        const id = req.params.id;
+        if(!id) return res.status(404).json({
+            message: 'Car Id Not Found',
+            success: false
+        })
+
+        const cars = await Car.findById(id)
+        if(!cars) return res.status(400).json({
+            message: "Car Not Found",
+            success: false
+        })
+
+        res.status(200).json({
+            message: "Here is the Car Found",
+            success: true,
+            car: cars
+        })
+
+    } catch (error) {
+        console.error("Error Fetching Car By Id" , error.message)
+        res.status(500).json({
+            message: 'Internal Server Error',
+            success: false
+        }) 
     }
 }
