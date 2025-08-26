@@ -33,6 +33,11 @@ const rentalSchema = new mongoose.Schema({
     enum: ["Booked", "Ongoing", "Completed", "Cancelled"],
     default: "Booked",
   },
+  paymentMethod:{
+    type: String,
+    enum: ["Offline", "Online"],
+    required: true
+  },
   paymentStatus: {
     type: String,
     enum: ["Offline", "Paid", "Failed"],

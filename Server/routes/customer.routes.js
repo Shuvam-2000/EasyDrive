@@ -6,6 +6,7 @@ import {
 import {
   customerLogin,
   customerRegistration,
+  findCarByLocation,
   getAllCars,
   getCarById,
   getCustomerInfo,
@@ -27,6 +28,9 @@ router.get("/get", isCustomerAuthenticated, isCustomer, getCustomerInfo);
 router.get("/get-car", getAllCars);
 
 // get cars info by id
-router.get("/car/:id", getCarById);
+router.get("/car/:id", isCustomerAuthenticated, isCustomer, getCarById);
+
+// search car by location , type and avaliablity
+router.get("/search", findCarByLocation);
 
 export default router;

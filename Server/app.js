@@ -5,6 +5,7 @@ import { configDotenv } from 'dotenv';
 import customerRoute from "./routes/customer.routes.js"
 import ownerRoute from "./routes/owner.routes.js"
 import carRoute from "./routes/car.routes.js"
+import rentalRoute from "./routes/rental.route.js"
 
 // initialize the app
 const app = express();
@@ -29,6 +30,7 @@ app.get('/', (req,res) => {
 app.use("/api/customer", customerRoute);
 app.use("/api/owner", ownerRoute);
 app.use("/api/car", carRoute);
+app.use("/api/rental", rentalRoute);
 
 // run the server
 app.listen(PORT, () => console.log(`Server runing on PORT: ${PORT}`));

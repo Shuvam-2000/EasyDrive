@@ -212,3 +212,51 @@ export const getCarById = async (req,res) => {
         }) 
     }
 }
+
+// find car by location and avaliability status
+export const findCarByLocation = async (req,res) => {
+    try {
+        const carQuery = req.query.q || ""
+        
+        // optional type
+        const carType = req.query.type || ""
+
+        // check if query given
+        if(!carQuery.trim()) return res.status(400).json({
+            message: "Search query is required",
+            success: false
+        })
+
+        // search filter
+        let filter = {
+            location: { $regex: carQuery, $options: "i" }, // case sensitive
+            avaliable: "Avaliable" // only avaiable cars
+        }
+
+        // if the type is provided, add it to filter
+        if(carType.trim()){
+            filter.type = filter.type = { $regex: `^${carType}$`, $options: "i" };
+        }
+
+        // find all cars
+        const cars = await Car.find(filter);
+        
+        if(!cars.length) return res.status(404).json({
+            message: "No cars found matching your search",
+            success: false,
+        })
+
+        res.status(200).json({
+            message: "Here are cars found",
+            success: true,
+            car: cars
+        })
+        
+    } catch (error) {
+        console.error("Error Finding Car By Location" , error.message)
+        res.status(500).json({
+            message: 'Internal Server Error',
+            success: false
+        }) 
+    }
+}
