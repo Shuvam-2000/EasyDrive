@@ -11,6 +11,7 @@ import {
   getCarById,
   getCustomerInfo,
 } from "../controllers/customer.controller.js";
+import { smartCarRecommendation } from "../controllers/ai.controller.js";
 
 // intilaize the router
 const router = express.Router();
@@ -32,5 +33,8 @@ router.get("/car/:id", isCustomerAuthenticated, isCustomer, getCarById);
 
 // search car by location , type and avaliablity
 router.get("/search", findCarByLocation);
+
+// car recommendation
+router.get("/:id/recommend", isCustomerAuthenticated, isCustomer, smartCarRecommendation);
 
 export default router;
