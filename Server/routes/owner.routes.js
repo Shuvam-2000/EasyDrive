@@ -10,6 +10,7 @@ import {
   isOwner,
   isOwnerAuthenticated,
 } from "../middlewares/owner.middleware.js";
+import { generateShortDescription } from "../controllers/ai.controller.js";
 
 const router = express.Router();
 
@@ -27,5 +28,8 @@ router.get("/owner-cars", isOwnerAuthenticated, isOwner, getAllCarsRegistered);
 
 // delete car registered by owner
 router.delete("/delete-car", isOwnerAuthenticated, isOwner, deleteRegisteredCar);
+
+// generate description for car with AI
+router.post("/generate", isOwnerAuthenticated, isOwner, generateShortDescription);
 
 export default router;
