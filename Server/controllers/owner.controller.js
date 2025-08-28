@@ -162,7 +162,7 @@ export const getAllCarsRegistered = async (req,res) => {
       })
 
       // fetch the cars registered to the owner by ownerId
-      const car = await Car.findOne({ owner: ownerId })
+      const car = await Car.find({ owner: ownerId })
 
       if(!car) return res.status(400).json({
         message: "No Cars Found",
