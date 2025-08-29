@@ -7,6 +7,7 @@ import {
   getBookingsForCustomer,
   getBookingsForOwner,
   rentAnyCar,
+  updateBookingStatus,
   verifyOnlinePayment,
 } from "../controllers/rental.controller.js";
 import {
@@ -41,6 +42,14 @@ router.get(
   isCustomerAuthenticated,
   isCustomer,
   getBookingsForCustomer
+);
+
+// update booking status
+router.patch(
+  "/update-booking",
+  isOwnerAuthenticated,
+  isOwner,
+  updateBookingStatus
 );
 
 export default router;

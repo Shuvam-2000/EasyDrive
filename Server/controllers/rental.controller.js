@@ -234,3 +234,49 @@ export const getBookingsForCustomer = async (req, res) => {
     });
   }
 };
+
+// update status of booking by owner
+export const updateBookingStatus = async (req,res) => {
+  try {
+    const ownerId = req.owner?.ownerId;
+    if(!ownerId) return res.status(404).json({
+      message: "Owner Id not found"
+    })
+
+    const  { bookingId, status } = req.body;
+    if(!bookingId || !status) return res.status(400).json({
+      message: 'BookingId and Status is required',
+      success: false
+    })
+
+    const allowedStatuses = ["Booked", "Ongoing", "Completed", "Canceled"]
+    if(!allowedStatuses.includes(status)) return res.status(400).json({
+      message: 'Invalid status value',
+      success: false
+    })
+
+    const rental = await Rental.findOne({ _id: bookingId, owner: ownerId });
+    if (!rental) {
+      return res.status(404).json({
+        message: "Booking not found or not authorized",
+        success: false,
+      });
+    }
+
+    // update status
+    rental.status = status;
+    await rental.save();
+
+    return res.status(200).json({
+      message: "Booking status updated successfully",
+      success: true,
+      rental,
+    });
+  } catch (error) {
+    console.error("Error Updating Booking Status:", error.message);
+    res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+}
