@@ -65,7 +65,7 @@ export const rentAnyCar = async (req,res) => {
         }
 
         // online payment
-        if(payemntMethod === "Online"){
+        if(paymentMethod === "Online"){
             const options = {
                 amount: totalPrice * 100, 
                 currency: "INR",
@@ -97,7 +97,7 @@ export const rentAnyCar = async (req,res) => {
 }
 
 // verify the payment if done online
-export const verifyOnlinePayment = async (req,res) => {
+export const verifyOnlinePayment = async (req, res) => {
     try {
         const { razorpay_order_id, 
                 razorpay_payment_id, 
@@ -120,16 +120,18 @@ export const verifyOnlinePayment = async (req,res) => {
             .update(razorpay_order_id + "|" + razorpay_payment_id)
             .digest("hex");
 
-        if(generatedSignature !== razorpay_signature) {
-                return res.status(400).json({ 
-                    message: "Payment verification failed", 
-                    success: false 
-                });
+        if (generatedSignature !== razorpay_signature) {
+            return res.status(400).json({ 
+                message: "Payment verification failed", 
+                success: false 
+            });
         }
 
-        // verfify payment and create booking
+        // verify payment and create booking
+        const customerId = req.customer.customerId; 
+
         const rental = await Rental.create({
-            customer: req.customer._id,
+            customer: customerId,
             car: rentalData.carId,
             owner: rentalData.ownerId,
             startDate: new Date(rentalData.startDate),
@@ -141,7 +143,7 @@ export const verifyOnlinePayment = async (req,res) => {
         });
 
         // Update customer's bookings array
-        const customer = await Customer.findById(req.customer._id);
+        const customer = await Customer.findById(customerId);
         customer.bookings.push(rental._id);
         await customer.save();
 
